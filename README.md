@@ -6,7 +6,7 @@ Este projeto refere-se a uma aplicação móvel simples para gerência de partid
 - Soraya Ferreira
 - João Pedro Teixeira do Espírito Santo
 
-Ela possui as seguintes funcionalidades.
+## Ela possui as seguintes funcionalidades.
 
 👥 **Gerência de usuários, permitindo:**
   - O cadastro de usuários (Jogador ou Organização) com foto;
