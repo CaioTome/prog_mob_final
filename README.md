@@ -12,6 +12,13 @@ Este projeto refere-se a uma aplicação móvel simples para gerência de partid
   - O cadastro de usuários (Jogador ou Organização) com foto;
   - Criptografia da Senha do Usuário
 
+### Papéis:
+#### Jogador
+O jogador pode gerenciar o próprio perfil e realizar alterações nos campos: "Apelido, Nome e Data de Nascimento"
+
+### Organização
+Possui acesso total ao sistema.
+
 ⛹️‍♂️ **Gerência de jogadores, permitindo:**
   - O cadastro de jogadores como foto da galeria ou da câmera;
   - A atualização de dados dos jogadores;
