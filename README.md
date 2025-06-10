@@ -1,5 +1,5 @@
 # Fifa UFMS ⚽️⛹️
-Este projeto refere-se a uma aplicação móvel simples para gerência de partidas de futebol.
+Este projeto refere-se a uma aplicação móvel simples para gerênciar e visualizar partidas, jogadores e times de futebol.
 
 ## Nome dos Alunos:
 - Caio Felipe Azevedo Tome
@@ -9,15 +9,15 @@ Este projeto refere-se a uma aplicação móvel simples para gerência de partid
 ## Ela possui as seguintes funcionalidades.
 
 👥 **Gerência de usuários, permitindo:**
-  - O cadastro de usuários (Jogador ou Organização) com foto;
+  - O cadastro de usuários (Organização e Torcedor) com foto;
   - Criptografia da Senha do Usuário
 
 ### Papéis:
-#### Jogador
-O jogador pode gerenciar o próprio perfil e realizar alterações nos campos: "Apelido, Nome e Data de Nascimento"
-
 ### Organização
 Possui acesso total ao sistema.
+
+### Torcedor
+Pode ver as informações cadastradas, mas não pode alterar os dados
 
 ⛹️‍♂️ **Gerência de jogadores, permitindo:**
   - O cadastro de jogadores como foto da galeria ou da câmera;
@@ -26,7 +26,9 @@ Possui acesso total ao sistema.
   - A listagem de todos os jogadores cadastrados
 
 🤼 **Gerência de times, permitindo:**
-  - O CRUD de times;
+  - Cadastro de times;
+  - Atualizar times;
+  - A listagem de todos os times cadastrados
 
 🏆️ **Gerência de partidas, permitindo:**
   - O cadastro de partidas;
