@@ -3,7 +3,7 @@ Este projeto refere-se a uma aplicação móvel simples para gerência de partid
 
 ## Nome dos Alunos:
 - Caio Felipe Azevedo Tome
-- Soraya Ferreira
+- Soraya Dias Ferreira
 - João Pedro Teixeira do Espírito Santo
 
 ## Ela possui as seguintes funcionalidades.
