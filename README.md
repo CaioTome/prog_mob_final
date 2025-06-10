@@ -1,7 +1,7 @@
 # Fifa UFMS ⚽️⛹️
 Este projeto refere-se a uma aplicação móvel simples para gerência de partidas de futebol.
 
-##Nome dos Alunos:
+## Nome dos Alunos:
 - Caio Felipe Azevedo Tome
 - Soraya Ferreira
 - João Pedro Teixeira do Espírito Santo
