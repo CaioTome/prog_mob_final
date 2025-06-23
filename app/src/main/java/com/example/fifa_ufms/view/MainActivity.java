@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Inserir time padrão
-        /*Executors.newSingleThreadExecutor().execute(() -> {
+        Executors.newSingleThreadExecutor().execute(() -> {
             CampeonatoDatabase db = CampeonatoDatabase.getInstance(getApplicationContext());
 
             if (db.timeDao().listarTodosTimes().isEmpty()) {
@@ -34,16 +34,16 @@ public class MainActivity extends AppCompatActivity {
 
                 // Inserir jogadores
                 Jogador jogador1 = new Jogador(
-                        0, 1, 5, "2001-04-15", "caio@ufms.br", "Caio", "Caio", 1
+                        0, 1, 5, "2001-04-15", "caio@ufms.br", "Caio", "Caio", 1, "android.resource://com.example.fifa_ufms/drawable/ic_user"
                 );
                 Jogador jogador2 = new Jogador(
-                        1, 0, 3, "2000-10-30", "txas@ufms.br", "Txas", "Texeira", 1
+                        1, 0, 3, "2000-10-30", "txas@ufms.br", "Txas", "Texeira", 1, "android.resource://com.example.fifa_ufms/drawable/ic_user"
                 );
                 Jogador jogador3 = new Jogador(
-                        0, 2, 4, "2002-02-28", "Sora@uems.br", "Sora", "Soraya", 2
+                        0, 2, 4, "2002-02-28", "Sora@uems.br", "Sora", "Soraya", 2, "android.resource://com.example.fifa_ufms/drawable/ic_user"
                 );
                 Jogador jogador4 = new Jogador(
-                        1, 1, 2, "1999-11-11", "Sophy@uems.br", "Sophy", "Sophya", 2
+                        1, 1, 2, "1999-11-11", "Sophy@uems.br", "Sophy", "Sophya", 2, "android.resource://com.example.fifa_ufms/drawable/ic_user"
                 );
 
                 db.jogadorDao().inserirJogador(jogador1);
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 Partida partida = new Partida("2025-06-01", 1, 2, 3, 2);
                 db.partidaDao().inserirPartida(partida);
             }
-        });*/
+        });
 
         // Card para Times
         LinearLayout cardTimes = findViewById(R.id.card_times);

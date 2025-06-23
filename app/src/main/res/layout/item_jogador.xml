@@ -11,7 +11,7 @@
     android:background="@drawable/bg_item_jogador"
     android:gravity="center_vertical">
 
-    <!-- Ícone  gostaria que fosse uma foto do jogador-->
+    <!-- Ícone -->
     <ImageView
         android:id="@+id/image_jogador_icon"
         android:layout_width="40dp"
