@@ -14,6 +14,8 @@
         android:theme="@style/Theme.FifaUFMS"
         tools:targetApi="31">
 
+
+
         <!-- Tela principal -->
         <activity
             android:name=".view.MainActivity"
@@ -44,6 +46,15 @@
         <activity android:name=".view.JogadoresPartidaActivity" />
 
 
+
+
     </application>
+
+    <!-- Para acessar imagens (Android 13 ou superior) -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <!-- Para Android 12 ou inferior -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 
 </manifest>
