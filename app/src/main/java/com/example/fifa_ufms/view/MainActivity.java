@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Inserir time padrão
-        Executors.newSingleThreadExecutor().execute(() -> {
+        /*Executors.newSingleThreadExecutor().execute(() -> {
             CampeonatoDatabase db = CampeonatoDatabase.getInstance(getApplicationContext());
 
             if (db.timeDao().listarTodosTimes().isEmpty()) {
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 Partida partida = new Partida("2025-06-01", 1, 2, 3, 2);
                 db.partidaDao().inserirPartida(partida);
             }
-        });
+        });*/
 
         // Card para Times
         LinearLayout cardTimes = findViewById(R.id.card_times);
