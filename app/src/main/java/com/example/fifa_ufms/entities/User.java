@@ -5,7 +5,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "users", indices = {@Index(value = {"email"}, unique = true)})
-public class User {
+public class git User {
 
     @PrimaryKey(autoGenerate = true)
     public int userId;
