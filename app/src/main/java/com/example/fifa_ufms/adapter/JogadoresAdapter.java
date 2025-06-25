@@ -64,6 +64,14 @@ public class JogadoresAdapter extends RecyclerView.Adapter<JogadoresAdapter.View
             holder.imageJogador.setImageResource(R.drawable.ic_user); // ícone padrão
         }
 
+        boolean isAdmin = context.getSharedPreferences("usuario_prefs", Context.MODE_PRIVATE)
+                .getBoolean("tipo_usuario", false);
+
+        if (!isAdmin) {
+            holder.buttonEdit.setVisibility(View.GONE);
+            holder.buttonDelete.setVisibility(View.GONE);
+        }
+
         holder.buttonEdit.setOnClickListener(v -> listener.onJogadorClick(jogador));
 
         holder.buttonDelete.setOnClickListener(v -> {

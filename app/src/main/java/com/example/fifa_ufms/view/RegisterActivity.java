@@ -105,7 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Realiza a criptografia da senha com hash
         String passwordHash = PasswordHasher.hashPassword(password);
 
-        boolean admin = checkBoxAdmin.isChecked();
+        boolean Permissao = checkBoxAdmin.isChecked();
 
         // Criando objeto User
         User newUser = new User();
@@ -113,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
         newUser.setEmail(email);
         newUser.setPasswordHash(passwordHash); // Salva o hash da senha, não a senha em si
         newUser.setPhotoUri(photoUri.toString()); // Salva o endereço da foto como string
-        newUser.setAdmin(admin);
+        newUser.setAdmin(Permissao);
 
         // Usa uma thread separada para não travar a tela ao salvar usuário no banco de dados
         ExecutorService executor = Executors.newSingleThreadExecutor();
