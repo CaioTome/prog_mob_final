@@ -1,6 +1,7 @@
 package com.example.fifa_ufms.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etEmail, etPassword;
     private Button btnLogin;
     private TextView tvGoToRegister;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,9 @@ public class LoginActivity extends AppCompatActivity {
                 if (user != null && user.getPasswordHash().equals(passwordHash)) {
                     // Login bem-sucedido!
                     Toast.makeText(LoginActivity.this, "Login bem-sucedido!", Toast.LENGTH_SHORT).show();
+
+                    SharedPreferences prefs = getSharedPreferences("usuario_prefs", MODE_PRIVATE);
+                    prefs.edit().putBoolean("tipo_usuario", user.getAdmin()).apply();
 
                     // Abrir a MainActivity
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);

@@ -14,13 +14,16 @@ public class User {
     public String passwordHash; // é imbecil guardar senha em formato texto normal
     public String photoUri; // Caminho (URI) para guardar a imagem
 
+    public boolean IsAdmin;
+
     public User() {}
 
-    public User(String name, String email, String passwordHash, String photoUri) {
+    public User(String name, String email, String passwordHash, String photoUri, boolean IsAdmin) {
         this.name = name;
         this.email = email;
         this.passwordHash = passwordHash;
         this.photoUri = photoUri;
+        this.IsAdmin = IsAdmin;
     }
 
     public int getUserId() { return userId; }
@@ -44,4 +47,10 @@ public class User {
     public void setPhotoUri(String photoUri) {
         this.photoUri = photoUri;
     }
+
+    public void setAdmin(boolean IsAdmin) {
+        this.IsAdmin = IsAdmin;
+    }
+
+    public boolean getAdmin() {return IsAdmin;}
 }

@@ -2,8 +2,10 @@
 package com.example.fifa_ufms.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -33,6 +35,11 @@ public class TimesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_times);
+
+        SharedPreferences prefs = getSharedPreferences("usuario_prefs", MODE_PRIVATE);
+        boolean isAdmin = prefs.getBoolean("tipo_usuario", false);
+
+
 
         // 1) instancia a lista para não ser null
         timesList = new ArrayList<>();
@@ -73,6 +80,10 @@ public class TimesActivity extends AppCompatActivity {
             Intent intent = new Intent(TimesActivity.this, TimeFormActivity.class);
             startActivity(intent);
         });
+
+        if (!isAdmin) {
+            btnNovoTime.setVisibility(View.GONE);
+        }
 
         // 5) carrega os dados iniciais de “times” de forma assíncrona
         loadTimesFromDatabase();

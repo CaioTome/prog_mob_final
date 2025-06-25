@@ -11,7 +11,7 @@ import com.example.fifa_ufms.entities.Time;
 import com.example.fifa_ufms.entities.Participacao;
 import com.example.fifa_ufms.entities.User;
 
-@Database(entities = {Jogador.class, Time.class, Partida.class, Participacao.class, User.class}, version = 3)
+@Database(entities = {Jogador.class, Time.class, Partida.class, Participacao.class, User.class}, version = 5)
 public abstract class CampeonatoDatabase extends RoomDatabase {
     private static volatile CampeonatoDatabase INSTANCE;
     public abstract JogadorDao jogadorDao();
@@ -29,7 +29,7 @@ public abstract class CampeonatoDatabase extends RoomDatabase {
                             CampeonatoDatabase.class,
                             "campeonato"
                     )
-                            .fallbackToDestructiveMigration() // <- adiciona aqui
+                            .fallbackToDestructiveMigration()
                             .allowMainThreadQueries()
                             .build();
                 }

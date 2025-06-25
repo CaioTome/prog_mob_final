@@ -1,7 +1,9 @@
 package com.example.fifa_ufms.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -31,6 +33,10 @@ public class JogadoresActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jogadores);
 
+        SharedPreferences prefs = getSharedPreferences("usuario_prefs", MODE_PRIVATE);
+        boolean isAdmin = prefs.getBoolean("tipo_usuario", false);
+
+
         // Botão de voltar
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> finish());
@@ -39,12 +45,20 @@ public class JogadoresActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_jogadores);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
+
         // Botão "Adicionar Jogador"
         Button addButton = findViewById(R.id.button_add_jogador);
         addButton.setOnClickListener(v -> {
             Intent intent = new Intent(JogadoresActivity.this, JogadorFormActivity.class);
             startActivity(intent);
         });
+
+        if (!isAdmin) {
+            addButton.setVisibility(View.GONE);
+        }
+
+
     }
 
     @Override
