@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -42,6 +43,9 @@ public class RegisterActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnRegister = findViewById(R.id.btnRegister);
+        CheckBox checkBoxAdmin = findViewById(R.id.checkBoxAdmin);
+
+
 
         ivProfilePhoto = findViewById(R.id.ivProfilePhoto);
 
@@ -71,6 +75,8 @@ public class RegisterActivity extends AppCompatActivity {
         String name = etName.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
+        CheckBox checkBoxAdmin = findViewById(R.id.checkBoxAdmin);
+
 
         // Valida se foi preenchido nome
         if (name.isEmpty()) {
@@ -99,12 +105,15 @@ public class RegisterActivity extends AppCompatActivity {
         // Realiza a criptografia da senha com hash
         String passwordHash = PasswordHasher.hashPassword(password);
 
+        boolean Permissao = checkBoxAdmin.isChecked();
+
         // Criando objeto User
         User newUser = new User();
         newUser.setName(name);
         newUser.setEmail(email);
         newUser.setPasswordHash(passwordHash); // Salva o hash da senha, não a senha em si
         newUser.setPhotoUri(photoUri.toString()); // Salva o endereço da foto como string
+        newUser.setAdmin(Permissao);
 
         // Usa uma thread separada para não travar a tela ao salvar usuário no banco de dados
         ExecutorService executor = Executors.newSingleThreadExecutor();

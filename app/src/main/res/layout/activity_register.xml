@@ -113,5 +113,18 @@
         </LinearLayout>
 
 
+    <CheckBox
+        android:id="@+id/checkBoxAdmin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="É administrador?" />
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cadastrar"
+        android:layout_marginTop="24dp"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

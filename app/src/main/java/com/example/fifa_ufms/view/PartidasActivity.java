@@ -1,6 +1,7 @@
 package com.example.fifa_ufms.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -46,10 +47,19 @@ public class PartidasActivity extends AppCompatActivity {
         partidaDao = db.partidaDao();
         timeDao = db.timeDao();
 
+        SharedPreferences prefs = getSharedPreferences("usuario_prefs", MODE_PRIVATE);
+        boolean isAdmin = prefs.getBoolean("tipo_usuario", false);
+
+
+
         botaoAdd.setOnClickListener(v -> {
             Intent intent = new Intent(PartidasActivity.this, PartidasFormActivity.class);
             startActivity(intent);
         });
+
+        if (!isAdmin) {
+            botaoAdd.setVisibility(View.GONE);
+        }
 
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> finish());
