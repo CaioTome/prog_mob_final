@@ -127,14 +127,48 @@ public class JogadorFormActivity extends AppCompatActivity {
 
     private void salvarJogador(boolean isNew) {
         String nome = binding.edittextNomeJogador.getText().toString().trim();
+        String nickname = binding.editNickname.getText().toString().trim();
+        String email = binding.editEmail.getText().toString().trim();
+        String dataNascimento = binding.editDataNascimento.getText().toString().trim();
+        String numeroGolsStr = binding.editNumeroGols.getText().toString().trim();
+        String numeroAmarelosStr = binding.editNumeroAmarelos.getText().toString().trim();
+        String numeroVermelhosStr = binding.editNumeroVermelhos.getText().toString().trim();
+        String idTimeStr = binding.editIdTime.getText().toString().trim();
+
         if (nome.isEmpty()) {
             Toast.makeText(this, "Por favor, preencha o nome do jogador", Toast.LENGTH_SHORT).show();
             return;
         }
+        else if (nickname.isEmpty()) {
+            Toast.makeText(this, "Por favor, preencha o nickname do jogador", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (email.isEmpty()) {
+            Toast.makeText(this, "Por favor, preencha o email do jogador", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (dataNascimento.isEmpty()) {
+            Toast.makeText(this, "Por favor, preencha a data de nascimento do jogador", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (numeroGolsStr.isEmpty()) {
+            Toast.makeText(this, "Por favor, preencha o número de gols do jogador", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (numeroAmarelosStr.isEmpty()) {
+            Toast.makeText(this, "Por favor, preencha o número de amarelos do jogador", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (numeroVermelhosStr.isEmpty()) {
+            Toast.makeText(this, "Por favor, preencha o número de vermelhos do jogador", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (idTimeStr.isEmpty()) {
+            Toast.makeText(this, "Por favor, preencha o ID do time do jogador", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        String nickname = binding.editNickname.getText().toString().trim();
-        String email = binding.editEmail.getText().toString().trim();
-        String dataNascimento = binding.editDataNascimento.getText().toString().trim();
+
         int numeroGols = parseIntOrZero(binding.editNumeroGols.getText().toString().trim());
         int numeroAmarelos = parseIntOrZero(binding.editNumeroAmarelos.getText().toString().trim());
         int numeroVermelhos = parseIntOrZero(binding.editNumeroVermelhos.getText().toString().trim());
