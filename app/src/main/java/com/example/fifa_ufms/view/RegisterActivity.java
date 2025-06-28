@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -82,10 +83,17 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void checkCameraPermissionAndDispatch() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+        String[] permissions = {
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        };
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             dispatchTakePictureIntent();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_CAMERA_PERMISSION);
         }
     }
 
@@ -95,18 +103,24 @@ public class RegisterActivity extends AppCompatActivity {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
+                Log.d("CameraDebug", "Photo file created: " + photoFile.getAbsolutePath());
             } catch (IOException ex) {
-                // Tratar erro
+                Log.e("CameraDebug", "Error creating file", ex);
                 Toast.makeText(this, "Erro ao criar o arquivo de imagem.", Toast.LENGTH_SHORT).show();
+                return;
             }
 
             if (photoFile != null) {
                 photoUri = FileProvider.getUriForFile(this,
                         "com.example.fifa_ufms.provider",
                         photoFile);
+                Log.d("CameraDebug", "Photo URI: " + photoUri.toString());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
+        } else {
+            Log.e("CameraDebug", "No camera app found");
+            Toast.makeText(this, "Nenhum aplicativo de câmera encontrado.", Toast.LENGTH_SHORT).show();
         }
     }
 
