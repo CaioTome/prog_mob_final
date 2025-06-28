@@ -3,6 +3,7 @@ package com.example.fifa_ufms.view;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Patterns; // <-- 1. IMPORT ADICIONADO
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -50,6 +51,12 @@ public class LoginActivity extends AppCompatActivity {
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Por favor, preencha todos os campos", Toast.LENGTH_SHORT).show();
             return;
+        }
+
+        // validacao de email. Caso o usuario insira um formato email valido, deve impedir o login
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Por favor, insira um e-mail válido", Toast.LENGTH_SHORT).show();
+            return; // Impede o login se o e-mail for inválido
         }
 
         // Busca o usuário no banco de dados em uma thread separada

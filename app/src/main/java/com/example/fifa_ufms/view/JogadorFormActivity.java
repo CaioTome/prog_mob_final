@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Patterns; // <-- 1. IMPORT ADICIONADO
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -145,6 +146,11 @@ public class JogadorFormActivity extends AppCompatActivity {
         }
         else if (email.isEmpty()) {
             Toast.makeText(this, "Por favor, preencha o email do jogador", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // validacao de email
+        else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Por favor, insira um formato de e-mail válido", Toast.LENGTH_SHORT).show();
             return;
         }
         else if (dataNascimento.isEmpty()) {

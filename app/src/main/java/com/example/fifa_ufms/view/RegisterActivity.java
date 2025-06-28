@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Patterns; // <-- 1. IMPORT ADICIONADO
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -17,8 +18,6 @@ import com.example.fifa_ufms.R;
 import com.example.fifa_ufms.database.CampeonatoDatabase;
 import com.example.fifa_ufms.entities.User;
 import com.example.fifa_ufms.utils.PasswordHasher;
-
-import com.example.fifa_ufms.R;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,15 +36,10 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // 2. INICIALIZAÇÃO DOS COMPONENTES (findViewById)
-        // Conecta as variáveis Java com os componentes do XML.
         etName = findViewById(R.id.etName);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnRegister = findViewById(R.id.btnRegister);
-        CheckBox checkBoxAdmin = findViewById(R.id.checkBoxAdmin);
-
-
 
         ivProfilePhoto = findViewById(R.id.ivProfilePhoto);
 
@@ -53,7 +47,6 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(v -> registerUser());
     }
 
-    // abre a galeria do celular
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
@@ -64,35 +57,38 @@ public class RegisterActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            // Se a imagem foi escolhida com sucesso, guardamos o URI dela
             photoUri = data.getData();
             ivProfilePhoto.setImageURI(photoUri);
         }
     }
 
-    // cadastro do usuário
     private void registerUser() {
         String name = etName.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         CheckBox checkBoxAdmin = findViewById(R.id.checkBoxAdmin);
 
-
-        // Valida se foi preenchido nome
         if (name.isEmpty()) {
             etName.setError("O nome é obrigatório!");
             etName.requestFocus();
             return;
         }
-        // valida se foi preenchido email
+
         if (email.isEmpty()) {
             etEmail.setError("O e-mail é obrigatório!");
             etEmail.requestFocus();
             return;
         }
-        // valida se foi preenchida a senha
+
+        // validacao de email. Sem um formato de email valido, o usuario nao pode se cadastrar
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.setError("Por favor, insira um formato de e-mail válido");
+            etEmail.requestFocus();
+            return;
+        }
+
         if (password.isEmpty()) {
-            etPassword.setError("A senha é obrigatória1!");
+            etPassword.setError("A senha é obrigatória!");
             etPassword.requestFocus();
             return;
         }
@@ -102,28 +98,37 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Realiza a criptografia da senha com hash
         String passwordHash = PasswordHasher.hashPassword(password);
+        boolean permissao = checkBoxAdmin.isChecked();
 
-        boolean Permissao = checkBoxAdmin.isChecked();
-
-        // Criando objeto User
         User newUser = new User();
         newUser.setName(name);
         newUser.setEmail(email);
-        newUser.setPasswordHash(passwordHash); // Salva o hash da senha, não a senha em si
-        newUser.setPhotoUri(photoUri.toString()); // Salva o endereço da foto como string
-        newUser.setAdmin(Permissao);
+        newUser.setPasswordHash(passwordHash);
+        newUser.setPhotoUri(photoUri.toString());
+        newUser.setAdmin(permissao);
 
-        // Usa uma thread separada para não travar a tela ao salvar usuário no banco de dados
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            CampeonatoDatabase.getInstance(getApplicationContext()).userDao().insert(newUser);
+            // verifica se o e-mail já existe no banco
+            User existingUser = CampeonatoDatabase.getInstance(getApplicationContext()).userDao().getUserByEmail(email);
 
-            // Volta para a thread principal
             runOnUiThread(() -> {
-                Toast.makeText(RegisterActivity.this, "Usuário cadastrado com sucesso!", Toast.LENGTH_LONG).show();
-                finish(); // Fecha a tela de cadastro e volta para a tela de Login
+                if (existingUser != null) {
+                    // Se o usuário já existe, mostra um erro
+                    etEmail.setError("Este e-mail já está em uso!");
+                    etEmail.requestFocus();
+                    Toast.makeText(RegisterActivity.this, "Este e-mail já está cadastrado.", Toast.LENGTH_LONG).show();
+                } else {
+                    // Se não existe, prossegue com a inserção
+                    executor.execute(() -> {
+                        CampeonatoDatabase.getInstance(getApplicationContext()).userDao().insert(newUser);
+                        runOnUiThread(() -> {
+                            Toast.makeText(RegisterActivity.this, "Usuário cadastrado com sucesso!", Toast.LENGTH_LONG).show();
+                            finish();
+                        });
+                    });
+                }
             });
         });
     }
