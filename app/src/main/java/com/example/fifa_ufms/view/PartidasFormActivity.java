@@ -112,13 +112,32 @@ public class PartidasFormActivity extends AppCompatActivity {
         spinnerTime1.setAdapter(adapter);
         spinnerTime2.setAdapter(adapter);
     }
+    private boolean placarValido() {
+        // Pega os textos dos EditTexts
+        String placar1Str = editTextPlacar1.getText().toString();
+        String placar2Str = editTextPlacar2.getText().toString();
 
+        // Converte os textos para inteiros
+        int placar1 = Integer.parseInt(placar1Str);
+        int placar2 = Integer.parseInt(placar2Str);
+
+        // Verifica se os placares estão entre 0 e 500
+        if (placar1 < 0 || placar1 > 500 || placar2 < 0 || placar2 > 500) {
+            return false;
+        }
+        return true;
+    }
     private void salvarPartida() {
         // Validação básica para campos vazios
         if (editTextData.getText().toString().isEmpty() ||
                 editTextPlacar1.getText().toString().isEmpty() ||
                 editTextPlacar2.getText().toString().isEmpty()) {
             Toast.makeText(this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Validacao de placar
+        if (!placarValido()) {
+            Toast.makeText(this, "Insira um placar válido!", Toast.LENGTH_SHORT).show();
             return;
         }
 
