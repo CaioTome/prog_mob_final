@@ -111,6 +111,10 @@ public class PartidasFormActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTime1.setAdapter(adapter);
         spinnerTime2.setAdapter(adapter);
+        // ATUALIZAÇÃO: carrega o segundo time no spinner 2, se houver pelo menos dois times na lista.
+        if (listaTimes.size() > 1) {
+            spinnerTime2.setSelection(1);
+        }
     }
     private boolean placarValido() {
         // Pega os textos dos EditTexts
