@@ -2,6 +2,7 @@ package com.example.fifa_ufms.view;  // ajuste para o pacote correto
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +45,10 @@ public class ClassificacaoActivity extends AppCompatActivity {
         rvClassificacao.addItemDecoration(
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         );
+
+        // Botão de voltar
+        ImageButton backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(v -> finish());
 
         // Obtém instância do banco Room
         db = CampeonatoDatabase.getInstance(this);
