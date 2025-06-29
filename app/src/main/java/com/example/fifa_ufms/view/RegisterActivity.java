@@ -1,129 +1,217 @@
 package com.example.fifa_ufms.view;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.example.fifa_ufms.R;
 import com.example.fifa_ufms.database.CampeonatoDatabase;
 import com.example.fifa_ufms.entities.User;
 import com.example.fifa_ufms.utils.PasswordHasher;
 
-import com.example.fifa_ufms.R;
-
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
+    // Constantes para requests
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_PICK_IMAGE = 2;
+    private static final int REQUEST_CAMERA_PERMISSION = 101;
 
     private EditText etName, etEmail, etPassword;
     private ImageView ivProfilePhoto;
     private Button btnRegister;
     private Uri photoUri;
+    private String currentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // 2. INICIALIZAÇÃO DOS COMPONENTES (findViewById)
-        // Conecta as variáveis Java com os componentes do XML.
         etName = findViewById(R.id.etName);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnRegister = findViewById(R.id.btnRegister);
+        ivProfilePhoto = findViewById(R.id.ivProfilePhoto);
         CheckBox checkBoxAdmin = findViewById(R.id.checkBoxAdmin);
 
-
-
-        ivProfilePhoto = findViewById(R.id.ivProfilePhoto);
-
-        ivProfilePhoto.setOnClickListener(v -> openGallery());
+        // Ao clicar na foto, mostra um diálogo de escolha
+        ivProfilePhoto.setOnClickListener(v -> showImageSourceDialog());
         btnRegister.setOnClickListener(v -> registerUser());
     }
 
-    // abre a galeria do celular
+    private void showImageSourceDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Escolha uma fonte para a imagem");
+        builder.setItems(new CharSequence[]{"Tirar foto", "Escolher da Galeria"}, (dialog, which) -> {
+            switch (which) {
+                case 0: // Tirar foto
+                    checkCameraPermissionAndDispatch();
+                    break;
+                case 1: // Escolher da Galeria
+                    openGallery();
+                    break;
+            }
+        });
+        builder.show();
+    }
+
+    private void checkCameraPermissionAndDispatch() {
+        String[] permissions = {
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        };
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            dispatchTakePictureIntent();
+        } else {
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_CAMERA_PERMISSION);
+        }
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+                Log.d("CameraDebug", "Photo file created: " + photoFile.getAbsolutePath());
+            } catch (IOException ex) {
+                Log.e("CameraDebug", "Error creating file", ex);
+                Toast.makeText(this, "Erro ao criar o arquivo de imagem.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (photoFile != null) {
+                photoUri = FileProvider.getUriForFile(this,
+                        "com.example.fifa_ufms.provider",
+                        photoFile);
+                Log.d("CameraDebug", "Photo URI: " + photoUri.toString());
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        } else {
+            Log.e("CameraDebug", "No camera app found");
+            Toast.makeText(this, "Nenhum aplicativo de câmera encontrado.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        startActivityForResult(intent, REQUEST_PICK_IMAGE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
+            } else {
+                Toast.makeText(this, "Permissão da câmera negada.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            // Se a imagem foi escolhida com sucesso, guardamos o URI dela
-            photoUri = data.getData();
-            ivProfilePhoto.setImageURI(photoUri);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                // A URI já foi definida no dispatchTakePictureIntent
+                ivProfilePhoto.setImageURI(photoUri);
+            } else if (requestCode == REQUEST_PICK_IMAGE && data != null && data.getData() != null) {
+                photoUri = data.getData();
+                ivProfilePhoto.setImageURI(photoUri);
+            }
         }
     }
 
-    // cadastro do usuário
     private void registerUser() {
         String name = etName.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         CheckBox checkBoxAdmin = findViewById(R.id.checkBoxAdmin);
 
-
-        // Valida se foi preenchido nome
         if (name.isEmpty()) {
             etName.setError("O nome é obrigatório!");
             etName.requestFocus();
             return;
         }
-        // valida se foi preenchido email
         if (email.isEmpty()) {
             etEmail.setError("O e-mail é obrigatório!");
             etEmail.requestFocus();
             return;
         }
-        // valida se foi preenchida a senha
         if (password.isEmpty()) {
-            etPassword.setError("A senha é obrigatória1!");
+            etPassword.setError("A senha é obrigatória!");
             etPassword.requestFocus();
             return;
         }
-
         if (photoUri == null) {
             Toast.makeText(this, "Por favor, selecione uma foto.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Realiza a criptografia da senha com hash
         String passwordHash = PasswordHasher.hashPassword(password);
+        boolean permissao = checkBoxAdmin.isChecked();
 
-        boolean Permissao = checkBoxAdmin.isChecked();
-
-        // Criando objeto User
         User newUser = new User();
         newUser.setName(name);
         newUser.setEmail(email);
-        newUser.setPasswordHash(passwordHash); // Salva o hash da senha, não a senha em si
-        newUser.setPhotoUri(photoUri.toString()); // Salva o endereço da foto como string
-        newUser.setAdmin(Permissao);
+        newUser.setPasswordHash(passwordHash);
+        newUser.setPhotoUri(photoUri.toString());
+        newUser.setAdmin(permissao);
 
-        // Usa uma thread separada para não travar a tela ao salvar usuário no banco de dados
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             CampeonatoDatabase.getInstance(getApplicationContext()).userDao().insert(newUser);
 
-            // Volta para a thread principal
             runOnUiThread(() -> {
                 Toast.makeText(RegisterActivity.this, "Usuário cadastrado com sucesso!", Toast.LENGTH_LONG).show();
-                finish(); // Fecha a tela de cadastro e volta para a tela de Login
+                finish();
             });
         });
     }

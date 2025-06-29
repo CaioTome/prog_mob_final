@@ -55,13 +55,14 @@
         </androidx.cardview.widget.CardView>
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="24dp"
+            android:paddingTop="80dp"
             android:paddingEnd="24dp"
             android:paddingBottom="24dp"
-            android:paddingTop="80dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header_container">
@@ -99,6 +100,13 @@
                 android:inputType="textPassword"
                 android:padding="16dp" />
 
+            <CheckBox
+                android:id="@+id/checkBoxAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="É administrador?" />
+
             <Button
                 android:id="@+id/btnRegister"
                 android:layout_width="match_parent"
@@ -112,19 +120,6 @@
 
         </LinearLayout>
 
-
-    <CheckBox
-        android:id="@+id/checkBoxAdmin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="É administrador?" />
-
-    <Button
-        android:id="@+id/btnRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/cadastrar"
-        android:layout_marginTop="24dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

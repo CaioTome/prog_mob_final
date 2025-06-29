@@ -2,6 +2,7 @@ package com.example.fifa_ufms.adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,8 @@ import android.app.AlertDialog;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
+import com.bumptech.glide.Glide; // Import Glide
 import com.example.fifa_ufms.R;
 import com.example.fifa_ufms.database.CampeonatoDatabase;
 import com.example.fifa_ufms.entities.Jogador;
@@ -46,7 +47,6 @@ public class JogadoresAdapter extends RecyclerView.Adapter<JogadoresAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull JogadoresAdapter.ViewHolder holder, int position) {
-
         Jogador jogador = jogadores.get(position);
 
         holder.textNome.setText(jogador.getNome());
@@ -56,12 +56,17 @@ public class JogadoresAdapter extends RecyclerView.Adapter<JogadoresAdapter.View
         holder.textGols.setText("Gols: " + jogador.getNumeroGols());
         holder.textCartoes.setText("Amarelos: " + jogador.getNumeroAmarelos() + " | Vermelhos: " + jogador.getNumeroVermelhos());
 
-        String imagemUri = jogador.getImagemUri();
+        String imageUriString = jogador.getImagemUri();
 
-        if (imagemUri != null && !imagemUri.isEmpty()) {
-            holder.imageJogador.setImageURI(Uri.parse(imagemUri));
+        if (imageUriString != null && !imageUriString.isEmpty()) {
+            // Use Glide to load the image
+            Glide.with(context)
+                    .load(Uri.parse(imageUriString))
+                    .placeholder(R.drawable.ic_user) // Show a placeholder while loading
+                    .error(R.drawable.ic_user) // Show an error icon if it fails
+                    .into(holder.imageJogador);
         } else {
-            holder.imageJogador.setImageResource(R.drawable.ic_user); // ícone padrão
+            holder.imageJogador.setImageResource(R.drawable.ic_user);
         }
 
         boolean isAdmin = context.getSharedPreferences("usuario_prefs", Context.MODE_PRIVATE)
@@ -80,14 +85,10 @@ public class JogadoresAdapter extends RecyclerView.Adapter<JogadoresAdapter.View
                     .setMessage("Deseja excluir este jogador e todas as partidas que ele jogou?")
                     .setPositiveButton("Sim", (dialog, which) -> {
                         CampeonatoDatabase db = CampeonatoDatabase.getInstance(context);
-
-                        // Deleta o jogador e as partidas do time
                         db.jogadorDao().deletarJogadorEPartidas(jogador.getNickname(), db);
-
                         jogadores.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, jogadores.size());
-
                         Toast.makeText(context, "Jogador e partidas deletados", Toast.LENGTH_SHORT).show();
                     })
                     .setNegativeButton("Não", null)
@@ -103,9 +104,7 @@ public class JogadoresAdapter extends RecyclerView.Adapter<JogadoresAdapter.View
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textNome, textNickname, textEmail, textDataNascimento, textGols, textCartoes;
         ImageButton buttonEdit, buttonDelete;
-
         ImageView imageJogador;
-
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -118,7 +117,6 @@ public class JogadoresAdapter extends RecyclerView.Adapter<JogadoresAdapter.View
             buttonEdit = itemView.findViewById(R.id.button_edit_jogador);
             buttonDelete = itemView.findViewById(R.id.button_delete_jogador);
             imageJogador = itemView.findViewById(R.id.image_jogador_icon);
-
         }
     }
 }

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -51,6 +52,10 @@ public class PartidasFormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_partida_form);
+
+        // Botão de voltar
+        ImageButton backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(v -> finish());
 
         // Inicialização dos componentes da UI
         editTextData = findViewById(R.id.editTextData);
@@ -111,14 +116,37 @@ public class PartidasFormActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTime1.setAdapter(adapter);
         spinnerTime2.setAdapter(adapter);
+        // ATUALIZAÇÃO: carrega o segundo time no spinner 2, se houver pelo menos dois times na lista.
+        if (listaTimes.size() > 1) {
+            spinnerTime2.setSelection(1);
+        }
     }
+    private boolean placarValido() {
+        // Pega os textos dos EditTexts
+        String placar1Str = editTextPlacar1.getText().toString();
+        String placar2Str = editTextPlacar2.getText().toString();
 
+        // Converte os textos para inteiros
+        int placar1 = Integer.parseInt(placar1Str);
+        int placar2 = Integer.parseInt(placar2Str);
+
+        // Verifica se os placares estão entre 0 e 500
+        if (placar1 < 0 || placar1 > 500 || placar2 < 0 || placar2 > 500) {
+            return false;
+        }
+        return true;
+    }
     private void salvarPartida() {
         // Validação básica para campos vazios
         if (editTextData.getText().toString().isEmpty() ||
                 editTextPlacar1.getText().toString().isEmpty() ||
                 editTextPlacar2.getText().toString().isEmpty()) {
             Toast.makeText(this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Validacao de placar
+        if (!placarValido()) {
+            Toast.makeText(this, "Insira um placar válido!", Toast.LENGTH_SHORT).show();
             return;
         }
 
